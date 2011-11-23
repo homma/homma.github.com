@@ -1,3 +1,6 @@
+---
+title: What is the One True License?
+---
 
 About
 =====
