@@ -1,4 +1,5 @@
 # page template
+# coding-utf-8
 
 header = '''\
 <meta charset=utf-8>

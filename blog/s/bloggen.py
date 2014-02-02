@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 # static blog page generator
+# coding: utf-8
 
 import sys
 import os

@@ -1,4 +1,5 @@
 # list of blog entries
+# coding: utf-8
 
 # format
 ## [[ path1, title1, date1 ], [ path2, title2, date2 ], ... ]]
@@ -15,6 +16,6 @@
 # ]
 
 entries = [
-   [ "test1/index.html", "test title 1", "2014/02/02"],
+   [ "20140203/index", "Blog を開設しました", "2014/02/03"],
 ]
 
