@@ -1,0 +1,32 @@
+body {
+  background-color: whitesmoke;
+}
+
+div.blog_entry {
+  width: 800px;
+  background-color: white;
+  margin: auto;
+}
+
+div.blog_title {
+  width: 90%;
+  margin: auto;
+}
+
+iframe.blog_frame {
+  width: 90%;
+  border-style: solid;
+  border-color: lightgray;
+  border-width: 1px;
+  display: block;
+  margin: auto;
+}
+
+div.blog_footer {
+  width: 90%;
+  margin: auto;
+}
+
+div.page_footer {
+  text-align: center;
+}
