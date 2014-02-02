@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+# static blog page generator
+
 import sys
 import os
 
