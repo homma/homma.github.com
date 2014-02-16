@@ -3,6 +3,8 @@ title: Blog エントリー追加手順のメモ
 ---
 <link rel="stylesheet" href="./style.css" type="text/css" />
 
+### Blog エントリーの追加手順
+
 #### blog/a ディレクトリ下に記事用のディレクトリを作成する
 
 ディレクトリ名は任意  
@@ -36,4 +38,11 @@ Markdown で記述したファイルは .md を除いたファイル名にする
 
     % cd ../..
     % ./upload.sh
+
+### Tips and Memo
+
+* Markdown で記述する際の Tips
+* 先頭に title: ... を入れないと Markdown として認識されないっぽい
+* code block は backquote で記述すると先頭に改行が入ってしまうのでインデントで
+* stylesheet を使用する場合は先頭付近に link タグで挿入する
 
