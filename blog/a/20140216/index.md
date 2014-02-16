@@ -4,6 +4,7 @@ title: Blog エントリー追加手順のメモ
 <link rel="stylesheet" href="./style.css" type="text/css" />
 
 ### Blog エントリーの追加手順
+--------
 
 #### blog/a ディレクトリ下に記事用のディレクトリを作成する
 
@@ -40,6 +41,7 @@ Markdown で記述したファイルは .md を除いたファイル名にする
     % ./upload.sh
 
 ### Tips and Memo
+--------
 
 #### Markdown で記述する際の Tips
 
