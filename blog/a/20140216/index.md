@@ -10,6 +10,7 @@ title: Blog エントリー追加手順のメモ
     % cd blog/a/${DATE}
 ```
 
+
 ### 記事のファイルを作成する
 
 ファイル名は任意  
@@ -18,6 +19,7 @@ Markdown で記述する場合はファイル名の最後を .md にする
 ```
 % vi index.md
 ```
+
 
 ### blog/a/article.py を編集して記事のファイルを追加する
 
@@ -29,12 +31,14 @@ Markdown で記述したファイルは .md を除いたファイル名にする
 % vi article.py
 ```
 
+
 ### blog/s/bloggen.py を実行し、Blog の構成ファイルを生成する
 
 ```
 % cd ../s
 % ./bloggen.py
 ```
+
 
 ### upload.sh で Github Page をアップデートする
 
