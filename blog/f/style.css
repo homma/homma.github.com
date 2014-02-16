@@ -7,13 +7,14 @@ div.blog_entry {
   background-color: white;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
 
 div.blog_title {
   width: 90%;
   margin: auto;
+  padding: 10px;
 }
 
 iframe.blog_frame {
