@@ -41,8 +41,9 @@ Markdown で記述したファイルは .md を除いたファイル名にする
 
 ### Tips and Memo
 
-* Markdown で記述する際の Tips
-  * 先頭に title: ... を入れないと Markdown として認識されないっぽい
-  * code block は backquote で記述すると先頭に改行が入ってしまうのでインデントで
-  * stylesheet を使用する場合は先頭付近に link タグで挿入する
+#### Markdown で記述する際の Tips
+
+* 先頭に title: ... を入れないと Markdown として認識されないっぽい
+* code block は backquote で記述すると先頭に改行が入ってしまうのでインデントで
+* stylesheet を使用する場合は先頭付近に link タグで挿入する
 
