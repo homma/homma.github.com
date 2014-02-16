@@ -17,31 +17,23 @@ title: Blog エントリー追加手順のメモ
 ファイル名は任意  
 Markdown で記述する場合はファイル名の最後を .md にする
     
-```sh
-% vi index.md
-```
+    % vi index.md
 
 #### blog/a/article.py を編集して記事のファイルを追加する
 
 entries 配列に記事の情報を追加する  
 Markdown で記述したファイルは .md を除いたファイル名にする
     
-```sh
-% cd ..
-% vi article.py
-```
+    % cd ..
+    % vi article.py
 
 #### blog/s/bloggen.py を実行し、Blog の構成ファイルを生成する
 
-```sh
-% cd ../s
-% ./bloggen.py
-```
+    % cd ../s
+    % ./bloggen.py
 
 #### upload.sh で Github Page をアップデートする
 
-```sh
-% cd ../..
-% ./upload.sh
-```
+    % cd ../..
+    % ./upload.sh
 
