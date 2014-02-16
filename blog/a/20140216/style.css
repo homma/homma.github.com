@@ -1,3 +1,12 @@
+hr {
+  margin-bottom: 4px;
+}
+
+hr {
+  border-width: 0px;
+  border-top-width: 1px;
+}
+
 pre {
   border-style: solid;
   border-color: lightgray;
