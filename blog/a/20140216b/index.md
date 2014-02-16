@@ -6,12 +6,12 @@ title: SVG でインタラクティブに線を引く
 <svg id="canvas"></svg>
 <script type="text/javascript" src="./script.js"></script>
 
-### Usage
+#### Usage
 
 * 上の枠内をクリックすると線が追加されます
 * ダブルクリックするとパスが閉じます
 
-# About
+#### About
 
 * SVG でインタラクティブに線を引くテストです
 * ラバーバンドは実装していません
