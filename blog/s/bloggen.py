@@ -51,7 +51,8 @@ def gen_pages():
     if (new_page):
       t = template.header
       css_url = config.CSS_FILE
-      s = t.format(css_url = css_url)
+      script_url = config.SCRIPT_FILE
+      s = t.format(css_url = css_url, script_url = script_url)
       f.write(s)
       
     # write entry
@@ -60,7 +61,8 @@ def gen_pages():
     url = config.ARTICLE_PATH + article.entries[n][0]
     title = article.entries[n][1]
     date = article.entries[n][2]
-    s = t.format(url = url, title = title, date = date)
+    id = "iframe" + str(n)
+    s = t.format(url = url, title = title, date = date, id = id)
     f.write(s)
     
     # flags

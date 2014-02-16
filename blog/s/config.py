@@ -24,6 +24,9 @@ INDEX_FILE = "../index.html"
 # stylesheet
 CSS_FILE = AUXFILE_PATH + "style.css"
 
+# javascript
+SCRIPT_FILE = AUXFILE_PATH + "script.js"
+
 # number of entiries in one page
 ENTRIES_PER_PAGE = 10
 
