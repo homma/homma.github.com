@@ -1,5 +1,9 @@
 pre {
   border-style: solid;
+  border-color: lightgray;
   border-width: 1px;
   border-radius: 3px;
+  margin: 15px;
+  padding: 10px;
+  background-color: aliceBlue;
 }
