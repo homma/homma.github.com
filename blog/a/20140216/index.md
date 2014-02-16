@@ -8,11 +8,9 @@ title: Blog エントリー追加手順のメモ
 ディレクトリ名は任意  
 同じ日に複数の記事を作成する場合は、適当にディレクトリ名を設定する
 
-```sh
-% export DATE=`date +%Y%m%d`
-% mkdir blog/a/${DATE}
-% cd blog/a/${DATE}
-```
+    % export DATE=`date +%Y%m%d`
+    % mkdir blog/a/${DATE}
+    % cd blog/a/${DATE}
 
 #### 記事のファイルを作成する
 
