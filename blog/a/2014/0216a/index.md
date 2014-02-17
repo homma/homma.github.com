@@ -1,7 +1,7 @@
 ---
 title: Blog エントリー追加手順のメモ
 ---
-<link rel="stylesheet" href="./style.css" type="text/css" />
+<link rel="stylesheet" href="../common.css" type="text/css" />
 
 ### Blog エントリーの追加手順
 --------
