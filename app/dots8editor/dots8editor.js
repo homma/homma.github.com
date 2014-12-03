@@ -1,4 +1,5 @@
 /***
+
 Copyright (c) 2014 Daisuke Homma
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -18,7 +19,10 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 DEALINGS IN THE SOFTWARE.
+
 ***/
+
+/* config.js */
 
 ////// Parameters that can be changed by user
 
@@ -50,7 +54,22 @@ config.canvas = {};
 config.canvas.horizontalCells = 80;
 config.canvas.verticalCells = 24;
 
-config.canvas.id = "svg20141130"
+config.canvas.id = "dots8canvas"
+
+
+/* parameters.js */
+
+////// Calculated Parameters (non changeable by user)
+
+//// dot
+
+config.cell.width = config.dot.width * 4;
+config.cell.height = config.dot.width * 9;
+
+//// canvas
+
+config.canvas.width = config.canvas.horizontalCells * config.cell.width;
+config.canvas.height = config.canvas.verticalCells * config.cell.height;
 
 //// execution modes
 
@@ -81,18 +100,137 @@ config.mode.useFragment = false;
 config.mode.useElementCache = false;
 
 
-//// Calculated Parameters (non changeable by user)
+/* data.js */
 
-// dot
+//// global data
 
-config.cell.width = config.dot.width * 4;
-config.cell.height = config.dot.width * 9;
+var data = {};
 
-// canvas
+// circle element template for cloneNode
 
-config.canvas.width = config.canvas.horizontalCells * config.cell.width;
-config.canvas.height = config.canvas.verticalCells * config.cell.height;
+if(config.mode.useElementCache) {
 
+  data.circleTemplate = false;
+
+}
+
+// data store for cell
+
+data.cells = [];
+
+// character code of dot zero
+
+data.dotZero = parseInt("2800", 16);
+
+
+/* transport.js */
+
+//// import / export
+
+function dataImport() {
+
+  // to be implemented
+
+}
+
+function cellToChar(cell) {
+
+  var n = 0;
+
+  // cell format
+  //
+  // 0 1
+  // 2 3
+  // 4 5
+  // 6 7
+  //
+  // binary format
+  //
+  // 76531420
+  //
+
+  var arr = [7, 6, 5, 3, 1, 4, 2, 0];
+
+  arr.forEach(function(i) {
+
+    n = n << 1;
+
+    if(cell[i].on) {
+
+      n += 1;
+
+    } else {
+
+      n += 0;
+
+    }
+
+  });
+
+  n += data.dotZero;
+
+  var ret = String.fromCharCode(n);
+  console.log(ret);
+
+  return ret;
+
+}
+
+function dataExport() {
+
+  var dat = "";
+
+  for(var i = 0; i < data.cells.length; i++) {
+
+    if(i == config.canvas.horizontalCells) {
+
+      dat += "\n";
+
+    }
+
+    dat += cellToChar(data.cells[i]);
+
+  }
+
+  console.log(dat);
+
+}
+
+
+/* event.js */
+
+// keyboad event handler
+function keyHandler(e) {
+
+  // export
+  if(e.keyCode == "E".charCodeAt(0)) {
+
+    dataExport();
+
+  }
+
+}
+
+// clicked on a dot
+
+function clicked(dot) {
+
+  if(dot.on) {
+
+    dot.dot.setAttribute("fill", config.color.off );
+    dot.on = false;
+
+  } else {
+
+    dot.dot.setAttribute("fill", config.color.on );
+    dot.on = true;
+
+  }
+
+}
+
+
+/* init.js */
 
 function createCanvas(id) {
 
@@ -116,24 +254,21 @@ function createElement(canvas, tagName) {
 
 }
 
-if(config.mode.useElementCache) {
-
-  var circleTemplate = false;
-
-}
-
 function createCircle(canvas, x, y, r) {
 
   var el;
 
   if(config.mode.useElementCache) {
-    if(circleTemplate) {
 
-      el = circleTemplate.cloneNode(false);
+    if(data.circleTemplate) {
+
+      el = data.circleTemplate.cloneNode(false);
 
     } else {
 
       el = createElement(canvas, 'circle');
+      data.circleTemplate = el;
+
       canvas.appendChild(el);
 
     }
@@ -165,25 +300,38 @@ function createSquare(canvas, x, y, w) {
 
 }
 
-function clicked(circle) {
+function createDot(x, y) {
 
-  color = circle.getAttribute("fill");
+  var r      = config.dot.width / 2;
+  var rect_w = config.dot.width * 2;
 
-  if(color == config.color.off ) {
-    circle.setAttribute("fill", config.color.on );
-  } else {
-    circle.setAttribute("fill", config.color.off );
-  }
+  // position of dot
+  var cx = x + config.dot.width;
+  var cy = y + config.dot.width;
+
+  // create dot
+  var circle = createCircle(canvas, cx, cy, r);
+  circle.setAttribute("fill", config.color.off);
+
+  // create rect (for hit test)
+  var rect = createSquare(canvas, x, y, rect_w);
+  rect.setAttribute("opacity", 0.0);
+
+  var dot = { dot: circle, rect: rect, on: false };
+
+  // add event
+  rect.onclick = function(e) { clicked(dot) };
+
+  return dot;
 
 }
 
 function createCell(canvas, x, y) {
 
-  var r      = config.dot.width / 2;
-  var rect_w = config.dot.width * 2;
-
+  // calculate positions of dots
   var positions = [];
 
+  var rect_w = config.dot.width * 2;
   for(var i = 0; i < 4; i++) {
 
     positions.push({ x: x         , y: y + i * rect_w})
@@ -191,28 +339,21 @@ function createCell(canvas, x, y) {
 
   }  
 
-  var w = config.dot.width * 2;
+  // create dots and record them
+  var cell = [];
+
   for(var i = 0; i < positions.length; i++) {
 
-    // position of rectangle
+    // position of up left corner of hit rect
     var x = positions[i].x;
     var y = positions[i].y;
 
-    // position of dot
-    var cx = x + config.dot.width;
-    var cy = y + config.dot.width;
-
-    var circle = createCircle(canvas, cx, cy, r);
-    circle.setAttribute("fill", config.color.off);
-
-    var rect = createSquare(canvas, x, y, rect_w);
-    rect.setAttribute("opacity", 0.0);
-
-    (function(target){
-      rect.onclick = function(e) { clicked(target); };
-    })(circle);
+    // create and record
+    cell.push( createDot(x, y) );
 
   }
+
+  data.cells.push(cell);
 
 }
 
@@ -258,5 +399,16 @@ function createCells(canvas) {
 
 }
 
-window.onload = function() { createCanvas(config.canvas.id); }
+
+/* main.js */
+
+function main() {
+
+  createCanvas(config.canvas.id);
+
+  document.onkeydown = keyHandler;
+
+}
+
+window.onload = main;
 
