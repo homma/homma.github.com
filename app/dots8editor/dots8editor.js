@@ -133,8 +133,9 @@ function dataImport() {
 
 }
 
-function cellToChar(cell) {
+function convertCellToChar(cell) {
 
+  // character code
   var n = 0;
 
   // cell format
@@ -167,10 +168,11 @@ function cellToChar(cell) {
 
   });
 
+  // add offset
   n += data.dotZero;
 
+  // convert to a string
   var ret = String.fromCharCode(n);
-  console.log(ret);
 
   return ret;
 
@@ -178,21 +180,21 @@ function cellToChar(cell) {
 
 function dataExport() {
 
-  var dat = "";
+  var str = "";
 
   for(var i = 0; i < data.cells.length; i++) {
 
     if(i == config.canvas.horizontalCells) {
 
-      dat += "\n";
+      str += "\n";
 
     }
 
-    dat += cellToChar(data.cells[i]);
+    str += convertCellToChar(data.cells[i]);
 
   }
 
-  console.log(dat);
+  console.log(str);
 
 }
 
