@@ -54,6 +54,8 @@ config.canvas = {};
 config.canvas.horizontalCells = 80;
 config.canvas.verticalCells = 24;
 
+config.canvas.cursor = "default";
+
 config.canvas.id = "dots8canvas"
 
 
@@ -127,9 +129,111 @@ data.dotZero = parseInt("2800", 16);
 
 //// import / export
 
+function convertCharToBitPattern(ch) {
+
+  // bit pattern
+  var pattern = [];
+
+  var code = ch.charCodeAt(0);
+
+  // remove offset
+  code -= data.dotZero;
+
+  // binary format
+  //
+  // 76543210
+  //
+  // bit pattern
+  //
+  // 0 3
+  // 1 4
+  // 2 5
+  // 6 7
+  //
+
+  var arr = [0, 3, 1, 4, 2, 5, 6, 7];
+
+  arr.forEach(function(i) {
+
+    var shift = 1 << i;
+    var bit = code & shift;
+
+    if(bit == 0) {
+
+      pattern.push(false);
+
+    } else {
+
+      pattern.push(true);
+
+    }
+
+  });
+
+  return pattern;
+
+}
+
+function input() {
+
+  return window.prompt("data to be imported:");
+
+}
+
+function updateDot(dot, on) {
+
+  dot.on = on;
+
+  if(on) {
+    dot.dot.setAttribute("fill", config.color.on);
+  } else {
+    dot.dot.setAttribute("fill", config.color.off);
+  }
+
+}
+
+function updateCell(cell, dots) {
+
+  for(var i = 0; i < 8; i++) {
+
+    var dot = cell[i];
+    var on = dots[i];
+    updateDot(dot, on);
+
+  }
+
+}
+
 function dataImport() {
 
-  // to be implemented
+  var str = input();
+
+  var importedCells = [];
+
+  for(var i = 0; i < str.length; i++) {
+
+    if(str[i] == "\n") {
+      continue;
+    }
+
+    var code = str.charCodeAt[i];
+
+    if( (code < config.dotZero) || (code > config.dotZero + 255) ) {
+      continue;
+    }
+
+    importedCells.push( convertCharToBitPattern(str[i]) );
+
+  }
+
+  // change dot attributes
+  for(var i = 0; i < data.cells.length; i++) {
+
+    var cell = data.cells[i];
+    var dots = importedCells[i];
+    updateCell(cell, dots);
+
+  }
 
 }
 
@@ -178,6 +282,13 @@ function convertCellToChar(cell) {
 
 }
 
+function output(str) {
+
+//  console.log(str);
+  window.alert(str);
+
+}
+
 function dataExport() {
 
   var str = "";
@@ -194,7 +305,7 @@ function dataExport() {
 
   }
 
-  console.log(str);
+  output(str);
 
 }
 
@@ -208,6 +319,13 @@ function keyHandler(e) {
   if(e.keyCode == "E".charCodeAt(0)) {
 
     dataExport();
+
+  }
+
+  // import
+  if(e.keyCode == "I".charCodeAt(0)) {
+
+    dataImport();
 
   }
 
@@ -241,6 +359,9 @@ function createCanvas(id) {
   // set size
   canvas.style.width = config.canvas.width;
   canvas.style.height = config.canvas.height;
+
+  // set cursor
+  canvas.style.cursor = config.canvas.cursor;
 
   createCells(canvas);
 
