@@ -24,58 +24,62 @@ DEALINGS IN THE SOFTWARE.
 
 /* config.js */
 
-////// Parameters that can be changed by user
+////// Parameters that can be changed by users
 
-var config = {};
+//// the container of all the global variables
+var d8 = {};
+
+//// configurations
+d8.config = {};
 
 //// dot
 
-config.dot = {};
+d8.config.dot = {};
 
 // size of each dot
-config.dot.width = 3;
+d8.config.dot.width = 3;
 
 //// colors
 
-config.color = {};
+d8.config.color = {};
 
-config.color.on = 'black';
-config.color.off = 'silver';
+d8.config.color.on = 'black';
+d8.config.color.off = 'silver';
 
 //// cell
 
-config.cell = {};
+d8.config.cell = {};
 
 //// canvas
 
-config.canvas = {};
+d8.config.canvas = {};
 
 // horizontal and vertical number of cells
-config.canvas.horizontalCells = 80;
-config.canvas.verticalCells = 24;
+d8.config.canvas.horizontalCells = 80;
+d8.config.canvas.verticalCells = 24;
 
-config.canvas.cursor = "default";
+d8.config.canvas.cursor = "default";
 
-config.canvas.id = "dots8canvas"
+d8.config.canvas.id = "dots8canvas"
 
 
 /* parameters.js */
 
-////// Calculated Parameters (non changeable by user)
+////// Fixed Calculated Parameters (non changeable by users)
 
 //// dot
 
-config.cell.width = config.dot.width * 4;
-config.cell.height = config.dot.width * 9;
+d8.config.cell.width = d8.config.dot.width * 4;
+d8.config.cell.height = d8.config.dot.width * 9;
 
 //// canvas
 
-config.canvas.width = config.canvas.horizontalCells * config.cell.width;
-config.canvas.height = config.canvas.verticalCells * config.cell.height;
+d8.config.canvas.width = d8.config.canvas.horizontalCells * d8.config.cell.width;
+d8.config.canvas.height = d8.config.canvas.verticalCells * d8.config.cell.height;
 
 //// execution modes
 
-config.mode = {};
+d8.config.mode = {};
 
 // update while display = none
 // become faster on chrome
@@ -83,51 +87,54 @@ config.mode = {};
 
 if(window.chrome) {
 
-  config.mode.offlineUpdate = true;
+  d8.config.mode.offlineUpdate = true;
 
 } else {
 
-  config.mode.offlineUpdate = false;
+  d8.config.mode.offlineUpdate = false;
 
 }
 
 // use document.createDocumentFragment
 // it seems not useful
 
-config.mode.useFragment = false;
+d8.config.mode.useFragment = false;
 
 // use element cache and cloneNode()
 // it seems not useful
 
-config.mode.useElementCache = false;
+d8.config.mode.useElementCache = false;
 
 
 /* data.js */
 
-//// global data
+//// global data that is altered from everywhere in the program
 
-var data = {};
+d8.data = {};
 
 // circle element template for cloneNode
 
-if(config.mode.useElementCache) {
+if(d8.config.mode.useElementCache) {
 
-  data.circleTemplate = false;
+  d8.data.circleTemplate = false;
 
 }
 
 // data store for cell
 
-data.cells = [];
+d8.data.cells = [];
 
 // character code of dot zero
 
-data.dotZero = parseInt("2800", 16);
+d8.data.dotZero = parseInt("2800", 16);
+d8.data.dotFull = parseInt("28ff", 16);
 
 
 /* transport.js */
 
 //// import / export
+
+//// Importer
 
 function convertCharToBitPattern(ch) {
 
@@ -137,7 +144,7 @@ function convertCharToBitPattern(ch) {
   var code = ch.charCodeAt(0);
 
   // remove offset
-  code -= data.dotZero;
+  code -= d8.data.dotZero;
 
   // binary format
   //
@@ -185,9 +192,9 @@ function updateDot(dot, on) {
   dot.on = on;
 
   if(on) {
-    dot.dot.setAttribute("fill", config.color.on);
+    dot.dot.setAttribute("fill", d8.config.color.on);
   } else {
-    dot.dot.setAttribute("fill", config.color.off);
+    dot.dot.setAttribute("fill", d8.config.color.off);
   }
 
 }
@@ -212,13 +219,16 @@ function dataImport() {
 
   for(var i = 0; i < str.length; i++) {
 
-    if(str[i] == "\n") {
+    var code = str.charCodeAt[i];
+
+    // remove new line charactors
+    // this is necessary
+    if( str[i] == "\n") {
       continue;
     }
 
-    var code = str.charCodeAt[i];
-
-    if( (code < config.dotZero) || (code > config.dotZero + 255) ) {
+    // remove non dot charactors
+    if( (code < d8.config.dotZero) || (d8.config.dotFull < code) ) {
       continue;
     }
 
@@ -227,15 +237,17 @@ function dataImport() {
   }
 
   // change dot attributes
-  for(var i = 0; i < data.cells.length; i++) {
+  for(var i = 0; i < d8.data.cells.length; i++) {
 
-    var cell = data.cells[i];
+    var cell = d8.data.cells[i];
     var dots = importedCells[i];
     updateCell(cell, dots);
 
   }
 
 }
+
+//// Exporter
 
 function convertCellToChar(cell) {
 
@@ -273,7 +285,7 @@ function convertCellToChar(cell) {
   });
 
   // add offset
-  n += data.dotZero;
+  n += d8.data.dotZero;
 
   // convert to a string
   var ret = String.fromCharCode(n);
@@ -285,7 +297,8 @@ function convertCellToChar(cell) {
 function output(str) {
 
 //  console.log(str);
-  window.alert(str);
+//  window.alert(str);
+  window.prompt("resulting string: ", str);
 
 }
 
@@ -293,15 +306,15 @@ function dataExport() {
 
   var str = "";
 
-  for(var i = 0; i < data.cells.length; i++) {
+  for(var i = 0; i < d8.data.cells.length; i++) {
 
-    if(i == config.canvas.horizontalCells) {
+    if(i == d8.config.canvas.horizontalCells) {
 
       str += "\n";
 
     }
 
-    str += convertCellToChar(data.cells[i]);
+    str += convertCellToChar(d8.data.cells[i]);
 
   }
 
@@ -315,15 +328,18 @@ function dataExport() {
 // keyboad event handler
 function keyHandler(e) {
 
+  var charE = "E".charCodeAt(0);
+  var charI = "I".charCodeAt(0);
+
   // export
-  if(e.keyCode == "E".charCodeAt(0)) {
+  if(e.keyCode == charE) {
 
     dataExport();
 
   }
 
   // import
-  if(e.keyCode == "I".charCodeAt(0)) {
+  if(e.keyCode == charI) {
 
     dataImport();
 
@@ -337,12 +353,12 @@ function clicked(dot) {
 
   if(dot.on) {
 
-    dot.dot.setAttribute("fill", config.color.off );
+    dot.dot.setAttribute("fill", d8.config.color.off );
     dot.on = false;
 
   } else {
 
-    dot.dot.setAttribute("fill", config.color.on );
+    dot.dot.setAttribute("fill", d8.config.color.on );
     dot.on = true;
 
   }
@@ -357,11 +373,11 @@ function createCanvas(id) {
   canvas = document.getElementById(id);
 
   // set size
-  canvas.style.width = config.canvas.width;
-  canvas.style.height = config.canvas.height;
+  canvas.style.width = d8.config.canvas.width;
+  canvas.style.height = d8.config.canvas.height;
 
   // set cursor
-  canvas.style.cursor = config.canvas.cursor;
+  canvas.style.cursor = d8.config.canvas.cursor;
 
   createCells(canvas);
 
@@ -381,16 +397,16 @@ function createCircle(canvas, x, y, r) {
 
   var el;
 
-  if(config.mode.useElementCache) {
+  if(d8.config.mode.useElementCache) {
 
-    if(data.circleTemplate) {
+    if(d8.data.circleTemplate) {
 
-      el = data.circleTemplate.cloneNode(false);
+      el = d8.data.circleTemplate.cloneNode(false);
 
     } else {
 
       el = createElement(canvas, 'circle');
-      data.circleTemplate = el;
+      d8.data.circleTemplate = el;
 
       canvas.appendChild(el);
 
@@ -425,21 +441,22 @@ function createSquare(canvas, x, y, w) {
 
 function createDot(x, y) {
 
-  var r      = config.dot.width / 2;
-  var rect_w = config.dot.width * 2;
+  var r      = d8.config.dot.width / 2;
+  var rect_w = d8.config.dot.width * 2;
 
   // position of dot
-  var cx = x + config.dot.width;
-  var cy = y + config.dot.width;
+  var cx = x + d8.config.dot.width;
+  var cy = y + d8.config.dot.width;
 
   // create dot
   var circle = createCircle(canvas, cx, cy, r);
-  circle.setAttribute("fill", config.color.off);
+  circle.setAttribute("fill", d8.config.color.off);
 
   // create rect (for hit test)
   var rect = createSquare(canvas, x, y, rect_w);
   rect.setAttribute("opacity", 0.0);
 
+  // dot object
   var dot = { dot: circle, rect: rect, on: false };
 
   // add event
@@ -454,7 +471,7 @@ function createCell(canvas, x, y) {
   // calculate positions of dots
   var positions = [];
 
-  var rect_w = config.dot.width * 2;
+  var rect_w = d8.config.dot.width * 2;
   for(var i = 0; i < 4; i++) {
 
     positions.push({ x: x         , y: y + i * rect_w})
@@ -476,33 +493,33 @@ function createCell(canvas, x, y) {
 
   }
 
-  data.cells.push(cell);
+  d8.data.cells.push(cell);
 
 }
 
 function createCells(canvas) {
 
-  if(config.mode.offlineUpdate) {
+  if(d8.config.mode.offlineUpdate) {
     var display = canvas.style.display;
     canvas.style.display = "none";
   }
 
-  if(config.mode.useFragment) {
+  if(d8.config.mode.useFragment) {
     var fragment = document.createDocumentFragment();
   }
 
-  var width = config.canvas.horizontalCells;
-  var height = config.canvas.verticalCells;
+  var width = d8.config.canvas.horizontalCells;
+  var height = d8.config.canvas.verticalCells;
 
   for(var i = 0; i < height; i++) {
 
-    var y = i * config.cell.height;
+    var y = i * d8.config.cell.height;
 
     for(var j = 0; j < width; j++) {
 
-      var x = j * config.cell.width;
+      var x = j * d8.config.cell.width;
 
-      if(config.mode.useFragment) {
+      if(d8.config.mode.useFragment) {
         createCell(fragment, x, y);
       } else {
         createCell(canvas, x, y);
@@ -512,11 +529,11 @@ function createCells(canvas) {
 
   }
 
-  if(config.mode.useFragment) {
+  if(d8.config.mode.useFragment) {
     canvas.appendChild(fragment);
   }
 
-  if(config.mode.offlineUpdate) {
+  if(d8.config.mode.offlineUpdate) {
     setTimeout( function(){ canvas.style.display = display; }, 0 )
   }
 
@@ -527,7 +544,7 @@ function createCells(canvas) {
 
 function main() {
 
-  createCanvas(config.canvas.id);
+  createCanvas(d8.config.canvas.id);
 
   document.onkeydown = keyHandler;
 
