@@ -205,49 +205,37 @@ function input() {
 
 }
 
-function updateCell(cell, dots) {
-
-  for(var i = 0; i < 8; i++) {
-
-    var dot = cell.dots[i];
-    var on = dots[i];
-    dot.change(on);
-
-  }
-
-}
-
 function dataImport() {
 
   var str = input();
+
+  // if no data or window.prompt has been cancelled
+  if( (str == null) || (str == "") ) {
+    return;
+  }
 
   var importedCells = [];
 
   for(var i = 0; i < str.length; i++) {
 
-    var code = str.charCodeAt[i];
-
-    // remove new line charactors
-    // this is necessary
-    if( str[i] == "\n") {
-      continue;
-    }
+    var code = str.charCodeAt(i);
 
     // remove non dot charactors
-    if( (code < d8.config.dotZero) || (d8.config.dotFull < code) ) {
+    if( (code < d8.data.dotZero) || (d8.data.dotFull < code) ) {
       continue;
     }
 
+    // change an input string charactor to a dot and store
     importedCells.push( convertCharToBitPattern(str[i]) );
 
   }
 
-  // change dot attributes
+  // update dots
   for(var i = 0; i < d8.data.cells.length; i++) {
 
     var cell = d8.data.cells[i];
     var dots = importedCells[i];
-    updateCell(cell, dots);
+    cell.updateDots(dots);
 
   }
 
@@ -267,9 +255,11 @@ function dataExport() {
 
   for(var i = 0; i < d8.data.cells.length; i++) {
 
-    if(i == d8.config.canvas.horizontalCells) {
+    // divide output to multiple lines by fixed length
+    var len = d8.config.canvas.horizontalCells;
+    if( (i % len == 0) && (i != 0) ) {
 
-      str += "\n";
+        str += "\n";
 
     }
 
@@ -289,63 +279,35 @@ function keyHandler(e) {
 
   var charE = "E".charCodeAt(0);
   var charI = "I".charCodeAt(0);
+  var charM = "M".charCodeAt(0);
 
-  // export
-  if(e.keyCode == charE) {
+  switch(e.keyCode) {
 
-    dataExport();
+    // export
+    case charE:
 
-  }
+      dataExport();
+      break;
 
-  // import
-  if(e.keyCode == charI) {
+    // import
+    case charI:
 
-    dataImport();
+      dataImport();
+      break;
 
-  }
+    // change mode
+    case charM:
 
-}
-
-/*
-// clicked on a dot
-
-function clicked(dot) {
-
-  if(dot.on) {
-
-    dot.dot.setAttribute("fill", d8.config.color.off );
-    dot.on = false;
-
-  } else {
-
-    dot.dot.setAttribute("fill", d8.config.color.on );
-    dot.on = true;
+      break;
 
   }
 
 }
-*/
 
-/* init.js */
 
-function createCanvas(id) {
+/* svg.js */
 
-  canvas = document.getElementById(id);
-
-  // set size
-  canvas.style.width = d8.config.canvas.width;
-  canvas.style.height = d8.config.canvas.height;
-
-  // set cursor
-  canvas.style.cursor = d8.config.canvas.cursor;
-
-  createCells(canvas);
-
-  if(d8.config.guide.use) {
-    setGuide();
-  }
-
-}
+// svg helper functions
 
 function createElement(canvas, tagName) {
 
@@ -402,6 +364,9 @@ function createSquare(canvas, x, y, w) {
   return el;
 
 }
+
+
+/* dots.js */
 
 function dot(x, y) {
 
@@ -497,6 +462,9 @@ dot.prototype.switch = function() {
 
 }
 
+
+/* cell.js */
+
 function cell(canvas, x, y) {
 
   // calculate positions of dots
@@ -532,6 +500,19 @@ cell.prototype.setGuide = function() {
   this.dots[2].setGuide();
   this.dots[4].setGuide();
   this.dots[6].setGuide();
+
+}
+
+cell.prototype.updateDots = function(dots) {
+
+  for(var i = 0; i < 8; i++) {
+
+    var dot = this.dots[i];
+    var on = dots[i];
+
+    dot.change(on);
+
+  }
 
 }
 
@@ -582,6 +563,9 @@ cell.prototype.toString = function() {
   return ret;
 
 }
+
+
+/* canvas.js */
 
 function createCells(canvas) {
 
@@ -640,6 +624,24 @@ function setGuide() {
 
 }
 
+function createCanvas(id) {
+
+  canvas = document.getElementById(id);
+
+  // set size
+  canvas.style.width = d8.config.canvas.width;
+  canvas.style.height = d8.config.canvas.height;
+
+  // set cursor
+  canvas.style.cursor = d8.config.canvas.cursor;
+
+  createCells(canvas);
+
+  if(d8.config.guide.use) {
+    setGuide();
+  }
+
+}
 
 
 /* main.js */
