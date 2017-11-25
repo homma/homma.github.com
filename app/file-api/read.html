@@ -4,6 +4,7 @@
 const main = () => {
 
   const input = document.createElement("input");
+  // input.style.display = "none";
   input.type = "file";
 
   const output = document.createElement("div");
@@ -32,7 +33,19 @@ const main = () => {
   document.body.appendChild(output);
 
   input.click();
+
+  document.onkeypress = e => {
+
+    if(e.key == 'o') {
+
+      input.click();
+
+    }
+
+  }
+
 }
 
 window.onload = main;
+
 </script>
