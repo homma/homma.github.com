@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 
 <script type="text/javascript">
-const data = ["foo"];
-const filename = "foo.txt";
-const attr = {type: "text/plain"};
-const f = new File(data, attr);
-const url = URL.createObjectURL(f);
-const anc = document.createElement("a");
-anc.href = url;
-anc.download = filename;
-// anc.target = "_blank";
-document.body.appendChild(anc);
-anc.click();
-document.body.removeChild(anc);
+const main = () => {
+  const data = ["foo"];
+  const filename = "foo.txt";
+  const attr = {type: "text/plain"};
+  const f = new File(data, attr);
+  const url = URL.createObjectURL(f);
+  const anc = document.createElement("a");
+  anc.href = url;
+  anc.download = filename;
+  // anc.target = "_blank";
+  document.body.appendChild(anc);
+  anc.click();
+  document.body.removeChild(anc);
+}
+window.onload = main;
 </script>

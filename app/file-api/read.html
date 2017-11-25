@@ -1,24 +1,28 @@
 <!DOCTYPE html>
 
 <script type="text/javascript">
-const input = document.createElement("input");
-input.type = "file";
+const main = () => {
+  const input = document.createElement("input");
+  input.type = "file";
 
-const inputChange = e => {
-  const f = e.target.files[0];
-  const name = f.name;
+  const inputChange = e => {
+    const f = e.target.files[0];
+    const name = f.name;
 
-  const reader = new FileReader();
-  const fileLoad = e => console.log(e.target.result);
+    const reader = new FileReader();
+    const fileLoad = e => console.log(e.target.result);
 
-  reader.addEventListener('load', fileLoad);
+    reader.addEventListener('load', fileLoad);
 
-  reader.readAsText(f);
+    reader.readAsText(f);
+  }
+
+  input.addEventListener("change", inputChange);
+
+  document.body.appendChild(input);
+
+  input.click();
 }
 
-input.addEventListener("change", inputChange);
-
-document.body.appendChild(input);
-
-input.click();
+window.onload = main;
 </script>
