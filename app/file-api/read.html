@@ -32,12 +32,14 @@ const main = () => {
   document.body.appendChild(input);
   document.body.appendChild(output);
 
+  // this does not work.
   input.click();
 
   document.onkeypress = e => {
 
     if(e.key == 'o') {
 
+      // this works.
       input.click();
 
     }
