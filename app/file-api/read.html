@@ -6,13 +6,13 @@ const main = () => {
   const input = document.createElement("input");
   input.type = "file";
 
-  const div = document.createElement("div");
-  div.id = "output";
+  const output = document.createElement("div");
+  output.id = "output";
 
   const fileLoad = e => {
 
     const data = e.target.result;
-    div.innerText = data;
+    output.innerText = data;
 
   }
 
@@ -29,6 +29,7 @@ const main = () => {
   input.addEventListener("change", inputChange);
 
   document.body.appendChild(input);
+  document.body.appendChild(output);
 
   input.click();
 }
