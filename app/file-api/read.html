@@ -2,16 +2,25 @@
 
 <script type="text/javascript">
 const main = () => {
+
   const input = document.createElement("input");
   input.type = "file";
+
+  const div = document.createElement("div");
+  div.id = "output";
+
+  const fileLoad = e => {
+
+    const data = e.target.result;
+    div.innerText = data;
+
+  }
 
   const inputChange = e => {
     const f = e.target.files[0];
     const name = f.name;
 
     const reader = new FileReader();
-    const fileLoad = e => console.log(e.target.result);
-
     reader.addEventListener('load', fileLoad);
 
     reader.readAsText(f);
